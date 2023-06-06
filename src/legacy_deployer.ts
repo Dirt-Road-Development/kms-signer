@@ -12,7 +12,7 @@ export class LegacyDeployer extends LegacySigner {
         super(kmsCredentials, chainId, rpcUrl);
     }
 
-    public async deployContract(abi: InterfaceAbi, bytecode: BytesLike, args: any[]) {
+    public async manualDeploy(abi: InterfaceAbi, bytecode: BytesLike, args: any[]) {
         const provider = new JsonRpcProvider(this.rpcUrl);
         const factory = new ContractFactory(abi, bytecode, provider);
 
@@ -25,6 +25,13 @@ export class LegacyDeployer extends LegacySigner {
         return await this.sendTransaction({
             ...deployTransaction,
             gasLimit: estimatedFee
+        });
+    }
+
+    public async deployContract(abi: InterfaceAbi, bytecode: BytesLike, args: any[]) {
+        const factory = new ContractFactory(abi, bytecode, this.signer);
+        return await factory.deploy(...args, {
+            type: this.transactionType 
         });
     }
 }
