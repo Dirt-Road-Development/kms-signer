@@ -33,7 +33,7 @@ export class AwsKmsSigner extends ethers.AbstractSigner {
             const publicKey = key.PublicKey;
 
             if (!publicKey) {
-                throw new Error(`Could not get Public Key from KMS.`);
+                throw new Error("Could not get Public Key from KMS.");
             }
 
             this.ethereumAddress = getEthereumAddress(publicKey);

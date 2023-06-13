@@ -3,7 +3,6 @@ import { AwsKmsSigner } from "./kms_signer";
 import { AwsKmsSignerCredentials } from "./types";
 
 export abstract class BaseSigner {
-    
     abstract transactionType: number;
 
     protected chainId: bigint;
@@ -17,21 +16,26 @@ export abstract class BaseSigner {
         kmsCredentials: AwsKmsSignerCredentials,
         chainId: bigint,
         rpcUrl: string,
-        initialize: boolean = true
+        initialize = true
     ) {
         this.signer = new AwsKmsSigner(kmsCredentials).connectByRpcUrl(rpcUrl);
         this.chainId = chainId;
         this.rpcUrl = rpcUrl;
         if (initialize) this.initialize();
-        
     }
 
-    abstract broadcastTransaction(signedTransaction: string) : Promise<TransactionResponse>;
-    abstract signTransaction(unsignedTransaction: TransactionRequest): Promise<string>;
-    abstract sendTransaction(unsignedTransaction: TransactionRequest) : Promise<TransactionResponse>;
-    
+    abstract broadcastTransaction(
+        signedTransaction: string
+    ): Promise<TransactionResponse>;
+    abstract signTransaction(
+        unsignedTransaction: TransactionRequest
+    ): Promise<string>;
+    abstract sendTransaction(
+        unsignedTransaction: TransactionRequest
+    ): Promise<TransactionResponse>;
+
     public async initialize() {
         this.address = await this.signer.getAddress();
-        this.nonce = await this.signer.getNonce()
+        this.nonce = await this.signer.getNonce();
     }
 }

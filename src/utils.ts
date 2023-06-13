@@ -69,8 +69,6 @@ export function getEthereumAddress(publicKey: Uint8Array): string {
     // I used https://lapo.it/asn1js to figure out how to parse this
     // and defined the schema in the EcdsaPubKey object
 
-
-
     const decodedAsn1Struct = EcdsaPubKey.decode(Buffer.from(publicKey), "der");
     const decodedPublicKey = decodedAsn1Struct.pubKey.data;
     const decodedTrimmedPublicKey = decodedPublicKey.slice(
@@ -91,11 +89,7 @@ export function getEthereumAddress(publicKey: Uint8Array): string {
  
  */
 export function findEthereumSig(signature: Buffer) {
-
-    const decodedAsn1Struct = EcdsaSigAsnParse.decode(
-        signature,
-        "der"
-    );
+    const decodedAsn1Struct = EcdsaSigAsnParse.decode(signature, "der");
     const r: BN = decodedAsn1Struct.r;
     let s: BN = decodedAsn1Struct.s;
 
@@ -122,7 +116,7 @@ export async function requestKmsSignature(
 ) {
     const signature = await sign(plaintext, kmsCredentials);
     if (!signature.Signature) {
-        throw new Error(`AWS KMS call failed`);
+        throw new Error("AWS KMS call failed");
     }
     return findEthereumSig(Buffer.from(signature.Signature));
 }
