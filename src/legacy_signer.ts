@@ -39,7 +39,7 @@ export class LegacySigner extends BaseSigner {
         return await this.signer.signTransaction({
             ...unsignedTransaction,
             chainId: this.chainId,
-            nonce: this.nonce ?? (await this.signer.getNonce()),
+            nonce: this.nonce ? this.nonce++ : (await this.signer.getNonce()),
             gasPrice:
                 unsignedTransaction.gasPrice ??
                 (
